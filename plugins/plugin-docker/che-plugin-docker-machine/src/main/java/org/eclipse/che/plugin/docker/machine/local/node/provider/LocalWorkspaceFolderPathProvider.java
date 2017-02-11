@@ -58,14 +58,6 @@ public class LocalWorkspaceFolderPathProvider implements WorkspaceFolderPathProv
      * /home/user/che/workspaces/{workspaceName} and it will be mount to the  dev-machine to {@literal che.workspace.projects.storage}
      */
     private String workspacesMountPoint;
-    /**
-     * this value provide path to projects on local host
-     * if this value will be set all workspace will manage
-     * same projects from your host
-     */
-    @Inject(optional = true)
-    @Named("host.projects.root")
-    private String hostProjectsFolder;
 
     /**
      * If environment variable with name {@link #ALLOW_FOLDERS_CREATION_ENV_VARIABLE} is equal (ignoring case) to
@@ -91,13 +83,11 @@ public class LocalWorkspaceFolderPathProvider implements WorkspaceFolderPathProv
     @VisibleForTesting
     protected LocalWorkspaceFolderPathProvider(String workspacesMountPoint,
                                                String oldWorkspacesMountPoint,
-                                               String projectsFolder,
                                                Provider<WorkspaceManager> workspaceManager,
                                                boolean createFolders,
                                                boolean isWindows) throws IOException {
         this.workspaceManager = workspaceManager;
         this.workspacesMountPoint = workspacesMountPoint;
-        this.hostProjectsFolder = projectsFolder;
         this.createFolders = createFolders;
         this.oldWorkspacesMountPoint = oldWorkspacesMountPoint;
         this.isWindows = isWindows;
@@ -105,9 +95,6 @@ public class LocalWorkspaceFolderPathProvider implements WorkspaceFolderPathProv
 
     @Override
     public String getPath(@Assisted("workspace") String workspaceId) throws IOException {
-        if (!isWindows && hostProjectsFolder != null) {
-            return hostProjectsFolder;
-        }
         try {
             WorkspaceManager workspaceManager = this.workspaceManager.get();
             Workspace workspace = workspaceManager.getWorkspace(workspaceId);
@@ -119,9 +106,6 @@ public class LocalWorkspaceFolderPathProvider implements WorkspaceFolderPathProv
     }
 
     public String getPathByName(String workspaceName) throws IOException {
-        if (!isWindows && hostProjectsFolder != null) {
-            return hostProjectsFolder;
-        }
         return doGetPathByName(workspaceName);
     }
 
@@ -164,13 +148,7 @@ public class LocalWorkspaceFolderPathProvider implements WorkspaceFolderPathProv
             }
         }
 
-        // create directories if needed
-        if (hostProjectsFolder == null) {
-            ensureExist(workspacesMountPoint,
-                        oldWorkspacesMountPoint == null ? "che.workspace.storage" : "che.user.workspaces.storage");
-        } else {
-            ensureExist(hostProjectsFolder, "host.projects.root");
-        }
+        ensureExist(workspacesMountPoint, oldWorkspacesMountPoint == null ? "che.workspace.storage" : "che.user.workspaces.storage");
     }
 
     private void ensureExist(String path,

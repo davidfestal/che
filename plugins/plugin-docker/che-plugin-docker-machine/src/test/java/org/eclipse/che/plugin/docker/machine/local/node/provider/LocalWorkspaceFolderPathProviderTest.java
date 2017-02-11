@@ -36,18 +36,17 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 @Listeners(value = {MockitoTestNGListener.class})
-public class LocalWorkspaceFolderPathProviderTest  {
+public class LocalWorkspaceFolderPathProviderTest {
     private static final String WS_ID   = "testWsId";
     private static final String WS_NAME = "testWsName";
 
     @Mock
-    private WorkspaceManager            workspaceManager;
+    private WorkspaceManager workspaceManager;
 
     private Provider<WorkspaceManager> workspaceManagerProvider = new TestProvider();
 
-    private String singleFolderForAllWorkspaces;
     private String oldWorkspacesRoot;
-    private File workspacesRootFile;
+    private File   workspacesRootFile;
     private String workspacesRoot;
 
     @BeforeMethod
@@ -61,7 +60,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
         Path tempDirectory = Files.createTempDirectory(getClass().getSimpleName());
         workspacesRoot = tempDirectory.toString();
         workspacesRootFile = tempDirectory.toFile();
-        singleFolderForAllWorkspaces = Paths.get(workspacesRoot, "singleFolderForAllWorkspaces").toString();
         oldWorkspacesRoot = Paths.get(workspacesRoot, "oldWorkspacesRoot").toString();
     }
 
@@ -87,7 +85,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
     public void returnSpecificFolderOnOnWindows() throws Exception {
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
                                                                                          oldWorkspacesRoot,
-                                                                                         singleFolderForAllWorkspaces,
                                                                                          workspaceManagerProvider,
                                                                                          false,// with true can not be tested on other OSes
                                                                                          true);
@@ -99,25 +96,9 @@ public class LocalWorkspaceFolderPathProviderTest  {
     }
 
     @Test
-    public void returnsSingleFolderForAllWorkspacesIfConfigured() throws Exception {
-        LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         oldWorkspacesRoot,
-                                                                                         singleFolderForAllWorkspaces,
-                                                                                         workspaceManagerProvider,
-                                                                                         false,
-                                                                                         false);
-
-        provider.init();
-        String providerPath = provider.getPath(WS_ID);
-
-        assertEquals(providerPath, singleFolderForAllWorkspaces);
-    }
-
-    @Test
     public void useOlderFolderIfConfigured() throws Exception {
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
                                                                                          oldWorkspacesRoot,
-                                                                                         null,
                                                                                          workspaceManagerProvider,
                                                                                          false,
                                                                                          false);
@@ -132,7 +113,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
     public void neitherCheckNorCreateFoldersIfCreationIsDisabled() throws Exception {
         assertTrue(workspacesRootFile.delete());
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         null,
                                                                                          null,
                                                                                          workspaceManagerProvider,
                                                                                          false,
@@ -149,7 +129,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
     public void createsFoldersIfConfigured() throws Exception {
         assertTrue(workspacesRootFile.delete());
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         null,
                                                                                          null,
                                                                                          workspaceManagerProvider,
                                                                                          true,
@@ -170,7 +149,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
     public void worksIfWorkspaceFolderExists() throws Exception {
         assertTrue(Paths.get(workspacesRoot, WS_NAME).toFile().mkdir());
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         null,
                                                                                          null,
                                                                                          workspaceManagerProvider,
                                                                                          true,
@@ -193,7 +171,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
         assertTrue(Paths.get(workspacesRoot, WS_NAME).toFile().createNewFile());
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
                                                                                          null,
-                                                                                         null,
                                                                                          workspaceManagerProvider,
                                                                                          true,
                                                                                          false);
@@ -208,7 +185,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
         Path tempFile = Files.createTempFile(getClass().getSimpleName(), null);
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(tempFile.toString(),
                                                                                          null,
-                                                                                         null,
                                                                                          workspaceManagerProvider,
                                                                                          true,
                                                                                          false);
@@ -220,12 +196,8 @@ public class LocalWorkspaceFolderPathProviderTest  {
           expectedExceptionsMessageRegExp = "Workspace folder '.*' is not directory. Check .* configuration property")
     public void throwsExceptionIfFileIsFoundBySingleWorkspacePath() throws Exception {
         Path tempFile = Files.createTempFile(getClass().getSimpleName(), null);
-        LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         oldWorkspacesRoot,
-                                                                                         tempFile.toString(),
-                                                                                         workspaceManagerProvider,
-                                                                                         true,
-                                                                                         false);
+        LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(tempFile.toString(),
+                                                                                         workspaceManagerProvider);
 
         provider.init();
         provider.getPath(WS_ID);
@@ -236,7 +208,6 @@ public class LocalWorkspaceFolderPathProviderTest  {
     public void throwsIOExceptionIfWorkspaceRetrievalFails() throws Exception {
         when(workspaceManager.getWorkspace(WS_ID)).thenThrow(new ServerException("expected test exception"));
         LocalWorkspaceFolderPathProvider provider = new LocalWorkspaceFolderPathProvider(workspacesRoot,
-                                                                                         null,
                                                                                          null,
                                                                                          workspaceManagerProvider,
                                                                                          true,
