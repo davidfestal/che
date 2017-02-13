@@ -31,5 +31,6 @@ public class DockerExtServerModule extends AbstractModule {
                                                            .permitDuplicates();
         devMachineEnvVars.addBinding().toProvider(org.eclipse.che.plugin.docker.machine.ext.provider.ProjectsRootEnvVariableProvider.class);
         devMachineEnvVars.addBinding().toProvider(org.eclipse.che.plugin.docker.machine.ext.provider.JavaOptsEnvVariableProvider.class);
+        devMachineEnvVars.addBinding().toProvider(org.eclipse.che.plugin.docker.machine.ext.provider.MavenOptsEnvVariableProvider.class);
     }
 }
