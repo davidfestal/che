@@ -31,11 +31,7 @@
         <module>agents</module>
         <module>plugins</module>
         <module>samples</module>
-        <!--
-        We avoid to build/maintain dashboard
-        since we are not going to use it
         <module>dashboard</module>
-        -->
         <module>assembly</module>
     </modules>
     <scm>
