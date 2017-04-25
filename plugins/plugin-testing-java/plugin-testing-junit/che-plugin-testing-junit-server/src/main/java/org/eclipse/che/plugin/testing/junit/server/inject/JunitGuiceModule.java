@@ -12,7 +12,7 @@ package org.eclipse.che.plugin.testing.junit.server.inject;
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
 
-import org.eclipse.che.api.testing.server.framework.TestRunner;
+import org.eclipse.che.plugin.testing.server.framework.TestRunner;
 import org.eclipse.che.inject.DynaModule;
 import org.eclipse.che.plugin.testing.junit.server.JUnitTestRunner;
 

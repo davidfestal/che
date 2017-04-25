@@ -26,7 +26,7 @@ import org.eclipse.che.api.promises.client.js.Executor.ExecutorBody;
 import org.eclipse.che.api.promises.client.js.JsPromiseError;
 import org.eclipse.che.api.promises.client.js.RejectFunction;
 import org.eclipse.che.api.promises.client.js.ResolveFunction;
-import org.eclipse.che.api.testing.shared.TestResult;
+import org.eclipse.che.plugin.testing.shared.TestResult;
 import org.eclipse.che.ide.MimeType;
 import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.command.CommandImpl;

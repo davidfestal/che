@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import org.eclipse.che.api.promises.client.Promise;
 import org.eclipse.che.api.promises.client.js.Promises;
-import org.eclipse.che.api.testing.shared.TestResult;
+import org.eclipse.che.plugin.testing.shared.TestResult;
 import org.eclipse.che.ide.api.data.tree.AbstractTreeNode;
 import org.eclipse.che.ide.api.data.tree.Node;
 import org.eclipse.che.ide.ui.Tooltip;

@@ -16,7 +16,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.eclipse.che.api.promises.client.Operation;
 import org.eclipse.che.api.promises.client.OperationException;
-import org.eclipse.che.api.testing.shared.TestingOutput;
+import org.eclipse.che.plugin.testing.shared.TestingOutput;
 import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.machine.WsAgentStateController;
 import org.eclipse.che.ide.api.machine.events.WsAgentStateEvent;
@@ -29,7 +29,7 @@ import org.eclipse.che.ide.websocket.MessageBus;
 import org.eclipse.che.ide.websocket.WebSocketException;
 import org.eclipse.che.ide.websocket.events.MessageHandler;
 
-import static org.eclipse.che.api.testing.shared.Constants.TESTING_OUTPUT_CHANNEL_NAME;;
+import static org.eclipse.che.plugin.testing.shared.Constants.TESTING_OUTPUT_CHANNEL_NAME;;
 
 /**
  * Handler which receives messages from the Testing tools.

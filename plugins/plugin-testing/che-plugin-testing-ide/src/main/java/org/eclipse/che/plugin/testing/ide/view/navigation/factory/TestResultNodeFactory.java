@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.plugin.testing.ide.view.navigation.factory;
 
-import org.eclipse.che.api.testing.shared.TestResult;
+import org.eclipse.che.plugin.testing.shared.TestResult;
 import org.eclipse.che.plugin.testing.ide.view.navigation.TestClassNavigation;
 import org.eclipse.che.plugin.testing.ide.view.navigation.nodes.TestResultClassNode;
 import org.eclipse.che.plugin.testing.ide.view.navigation.nodes.TestResultGroupNode;

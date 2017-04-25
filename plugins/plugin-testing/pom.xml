@@ -22,6 +22,8 @@
     <packaging>pom</packaging>
     <name>Che Plugin :: Testing :: Parent</name>
     <modules>
+        <module>che-plugin-testing-shared</module>
         <module>che-plugin-testing-ide</module>
+        <module>che-plugin-testing-server</module>
     </modules>
 </project>

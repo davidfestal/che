@@ -200,7 +200,7 @@ public class GwtXmlGeneratorTest {
         //given
         String[] args = new String[]{"--rootDir=" + testRoot,
                                      "--gwtFileName=com/myorg/My.gwt.xml",
-                                     "--includePackages=org.eclipse.che.api.testing",
+                                     "--includePackages=org.eclipse.che.plugin.testing",
                                      "--includePackages=org.eclipse.che.api.core"
         };
         GwtXmlGenerator.main(args);
@@ -212,7 +212,7 @@ public class GwtXmlGeneratorTest {
         assertEquals(inherits.size(), 3);
         assertEquals(inherits.get(0).getAttribute("name").getValue(), "org.eclipse.che.api.core.Core");
         assertEquals(inherits.get(1).getAttribute("name").getValue(), "org.eclipse.che.api.core.model.Model");
-        assertEquals(inherits.get(2).getAttribute("name").getValue(), "org.eclipse.che.api.testing.Testing");
+        assertEquals(inherits.get(2).getAttribute("name").getValue(), "org.eclipse.che.plugin.testing.Testing");
 
     }
 

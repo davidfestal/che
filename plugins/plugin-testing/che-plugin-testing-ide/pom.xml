@@ -66,10 +66,6 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.che.core</groupId>
-            <artifactId>che-core-api-testing-shared</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.che.core</groupId>
             <artifactId>che-core-commons-gwt</artifactId>
         </dependency>
         <dependency>
@@ -95,6 +91,10 @@
         <dependency>
             <groupId>org.eclipse.che.plugin</groupId>
             <artifactId>che-plugin-maven-shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.che.plugin</groupId>
+            <artifactId>che-plugin-testing-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.vectomatic</groupId>
@@ -179,14 +179,14 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>org.eclipse.che.core</groupId>
-                        <artifactId>che-core-api-testing-shared</artifactId>
+                        <groupId>org.eclipse.che.plugin</groupId>
+                        <artifactId>che-plugin-testing-shared</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
                     <dtoPackages>
-                        <package>org.eclipse.che.api.testing.shared</package>
+                        <package>org.eclipse.che.plugin.testing.shared</package>
                     </dtoPackages>
                     <outputDirectory>${dto-generator-out-directory}</outputDirectory>
                     <genClassName>org.eclipse.che.plugin.testing.ide.dto.DtoClientImpls</genClassName>

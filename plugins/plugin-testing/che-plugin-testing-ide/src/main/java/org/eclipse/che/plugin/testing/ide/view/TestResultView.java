@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.plugin.testing.ide.view;
 
-import org.eclipse.che.api.testing.shared.TestResult;
+import org.eclipse.che.plugin.testing.shared.TestResult;
 import org.eclipse.che.ide.api.mvp.View;
 import org.eclipse.che.ide.api.parts.base.BaseActionDelegate;
 
