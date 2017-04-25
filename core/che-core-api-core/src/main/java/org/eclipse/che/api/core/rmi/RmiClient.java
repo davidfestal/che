@@ -8,15 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.rmi;
+package org.eclipse.che.api.core.rmi;
 
+import org.eclipse.che.api.core.execution.ExecutionException;
+import org.eclipse.che.api.core.execution.ProcessEvent;
+import org.eclipse.che.api.core.execution.ProcessExecutor;
+import org.eclipse.che.api.core.execution.ProcessHandler;
+import org.eclipse.che.api.core.execution.ProcessListener;
+import org.eclipse.che.api.core.execution.ProcessOutputType;
 import org.eclipse.che.commons.lang.Pair;
-import org.eclipse.che.plugin.maven.server.execution.ExecutionException;
-import org.eclipse.che.plugin.maven.server.execution.ProcessEvent;
-import org.eclipse.che.plugin.maven.server.execution.ProcessExecutor;
-import org.eclipse.che.plugin.maven.server.execution.ProcessHandler;
-import org.eclipse.che.plugin.maven.server.execution.ProcessListener;
-import org.eclipse.che.plugin.maven.server.execution.ProcessOutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

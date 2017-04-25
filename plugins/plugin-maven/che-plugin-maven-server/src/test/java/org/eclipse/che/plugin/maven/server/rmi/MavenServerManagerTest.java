@@ -13,7 +13,7 @@ package org.eclipse.che.plugin.maven.server.rmi;
 import org.eclipse.che.plugin.maven.server.MavenServerManager;
 import org.eclipse.che.plugin.maven.server.MavenServerWrapper;
 import org.eclipse.che.plugin.maven.server.core.MavenProgressNotifier;
-import org.eclipse.che.plugin.maven.server.execution.JavaParameters;
+import org.eclipse.che.api.core.execution.JavaParameters;
 import org.eclipse.che.maven.data.MavenArtifact;
 import org.eclipse.che.maven.data.MavenKey;
 import org.eclipse.che.maven.data.MavenModel;

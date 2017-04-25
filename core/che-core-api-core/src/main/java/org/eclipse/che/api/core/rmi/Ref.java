@@ -8,22 +8,37 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.execution;
-
-import java.util.EventListener;
+package org.eclipse.che.api.core.rmi;
 
 /**
- * Listener for {@link ProcessHandler}
+ * Mutable version of {@link java.util.Optional}
  *
  * @author Evgen Vidolob
  */
-public interface ProcessListener extends EventListener {
+public class Ref<T> {
+    private T value;
 
-    void onStart(ProcessEvent event);
+    private Ref(T value) {
+        this.value = value;
+    }
 
-    void onText(ProcessEvent event, ProcessOutputType outputType);
+    public static <T> Ref<T> ofNull() {
+        return new Ref<>(null);
+    }
 
-    void onProcessTerminated(ProcessEvent event);
+    public static <T> Ref<T> of(T value) {
+        return new Ref<>(value);
+    }
 
-    void onProcessWillTerminate(ProcessEvent event);
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public boolean isNull() {
+        return value == null;
+    }
 }

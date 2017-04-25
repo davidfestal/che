@@ -8,15 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.execution;
+package org.eclipse.che.api.core.execution;
 
 /**
- * External process executor
+ * Exception throw by {@link ProcessExecutor}
  *
  * @author Evgen Vidolob
  */
-public interface ProcessExecutor {
+public class ExecutionException extends Exception {
 
-    ProcessHandler execute() throws ExecutionException;
+    public ExecutionException(String message) {
+        super(message);
+    }
 
+    public ExecutionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ExecutionException(Throwable cause) {
+        super(cause);
+    }
 }

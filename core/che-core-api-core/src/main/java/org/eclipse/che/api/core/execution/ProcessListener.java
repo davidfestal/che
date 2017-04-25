@@ -8,24 +8,22 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.execution;
+package org.eclipse.che.api.core.execution;
+
+import java.util.EventListener;
 
 /**
- * Exception throw by {@link ProcessExecutor}
+ * Listener for {@link ProcessHandler}
  *
  * @author Evgen Vidolob
  */
-public class ExecutionException extends Exception {
+public interface ProcessListener extends EventListener {
 
-    public ExecutionException(String message) {
-        super(message);
-    }
+    void onStart(ProcessEvent event);
 
-    public ExecutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    void onText(ProcessEvent event, ProcessOutputType outputType);
 
-    public ExecutionException(Throwable cause) {
-        super(cause);
-    }
+    void onProcessTerminated(ProcessEvent event);
+
+    void onProcessWillTerminate(ProcessEvent event);
 }

@@ -8,37 +8,13 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.rmi;
+package org.eclipse.che.api.core.execution;
 
 /**
- * Mutable version of {@link java.util.Optional}
+ * Contains native OS process output types
  *
  * @author Evgen Vidolob
  */
-public class Ref<T> {
-    private T value;
-
-    private Ref(T value) {
-        this.value = value;
-    }
-
-    public static <T> Ref<T> ofNull() {
-        return new Ref<>(null);
-    }
-
-    public static <T> Ref<T> of(T value) {
-        return new Ref<>(value);
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public boolean isNull() {
-        return value == null;
-    }
+public enum ProcessOutputType {
+    SYSTEM, STDOUT, STDERR
 }

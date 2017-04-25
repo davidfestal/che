@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.plugin.maven.server.rmi;
+package org.eclipse.che.api.core.rmi;
 
 import java.rmi.RemoteException;
 

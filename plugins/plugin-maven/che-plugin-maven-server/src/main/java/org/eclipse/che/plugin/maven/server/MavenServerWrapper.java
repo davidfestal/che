@@ -11,7 +11,7 @@
 package org.eclipse.che.plugin.maven.server;
 
 import org.eclipse.che.plugin.maven.server.core.MavenProgressNotifier;
-import org.eclipse.che.plugin.maven.server.rmi.RmiObjectWrapper;
+import org.eclipse.che.api.core.rmi.RmiObjectWrapper;
 import org.eclipse.che.maven.data.MavenArtifact;
 import org.eclipse.che.maven.data.MavenArtifactKey;
 import org.eclipse.che.maven.data.MavenRemoteRepository;
