@@ -33,6 +33,14 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.che.plugin</groupId>
+            <artifactId>che-plugin-ceylon-lang-ide</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.che.plugin</groupId>
+            <artifactId>che-plugin-ceylon-lang-shared</artifactId>
+        </dependency>        
+        <dependency>
+            <groupId>org.eclipse.che.plugin</groupId>
             <artifactId>che-plugin-composer-ide</artifactId>
         </dependency>
         <dependency>

@@ -1,0 +1,7 @@
+{
+  "id": "org.eclipse.che.ls.ceylon",
+  "name": "Ceylon language server",
+  "description": "Ceylon     intellisense",
+  "dependencies": [],
+  "properties": {}
+}
