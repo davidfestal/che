@@ -42,6 +42,8 @@ import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.kubernetes.api.model.extensions.Deployment;
 import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
@@ -224,7 +226,7 @@ public class OpenShiftConnector extends DockerConnector {
       OpenShiftDeploymentCleaner openShiftDeploymentCleaner,
       EventService eventService,
       @Nullable @Named("che.docker.ip.external") String cheServerExternalAddress,
-      @Named("che.openshift.project") String openShiftCheProjectName,
+      @Named("che.openshift.project") String openShiftCheProjectName,                  // ca sera remplacé par la récupération d'un nom en fonction de l'utilisateur courant
       @Named("che.openshift.liveness.probe.delay") int openShiftLivenessProbeDelay,
       @Named("che.openshift.liveness.probe.timeout") int openShiftLivenessProbeTimeout,
       @Named("che.openshift.workspaces.pvc.name") String workspacesPersistentVolumeClaim,
@@ -432,7 +434,7 @@ public class OpenShiftConnector extends DockerConnector {
         KubernetesStringUtils.getImageStreamNameFromPullSpec(imageStreamTagPullSpec);
 
     ImageStream imageStream;
-    try (OpenShiftClient openShiftClient = new DefaultOpenShiftClient()) {
+    try (OpenShiftClient openShiftClient = new DefaultOpenShiftClient()) {    //         Config config = new ConfigBuilder().withOauthToken(token).build(); try (OpenShiftClient client = new DefaultOpenShiftClient(config)) {
       imageStream =
           openShiftClient
               .imageStreams()
