@@ -331,6 +331,26 @@ CHE_IMAGE="${CHE_IMAGE_REPO}:${CHE_IMAGE_TAG}"
 # e.g. docker.io/rhchestage => docker.io\/rhchestage
 CHE_IMAGE_SANITIZED=$(echo "${CHE_IMAGE}" | sed 's/\//\\\//g')
 
+# TODO to remove some of these added properties
+#
+# CHE_WORKSPACE_CHE__SERVER__ENDPOINT should probably be set to null, and in this case the 
+# ApiEndpointEnvVariableProvider should be able to retrieve the che-host accessible address
+# from a service. And the OpenshiftConnector would providesuc a service that would return the right URL
+# depending on the fact that che-server and workspaces are separated or not :
+# get fully-qualified service name (if same cluster) or get service route url (if different clusters)
+#
+# CHE_WORKSPACES_ROUTING__SUFFIX should probably be replaced by the name of a service
+# that retrieves this information (of base Openshift cluster url for a user)
+# from a service (for OSIO: tenant and auth services).
+#
+# CHE_OPENSHIFT_WORKSPACES_MASTER__URL should probably be replaced by the name of a service
+# that retrieves this information (of base Openshift cluster url for a user)
+# from a service (for OSIO: tenant and auth services).
+#
+# Or the 2 previous properties might still exist, but the OSIO multi-tenant rh-che would add
+# Providers to inject these properties 
+
+
 MULTI_USER_REPLACEMENT_STRING="s+- env:+- env:\\n\
           - name: \"CHE_WORKSPACE_CHE__SERVER__ENDPOINT\"\\n\
             value: \"${CHE_WORKSPACE_CHE__SERVER__ENDPOINT}\"\\n\
