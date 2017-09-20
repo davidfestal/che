@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.eclipse.che.api.machine.server.model.impl.ServerConfImpl;
 import org.eclipse.che.api.machine.server.model.impl.ServerImpl;
+import org.eclipse.che.commons.env.EnvironmentContext;
 import org.eclipse.che.plugin.docker.client.json.ContainerInfo;
 import org.eclipse.che.plugin.docker.client.json.PortBinding;
 import org.stringtemplate.v4.ST;
@@ -37,7 +38,7 @@ import org.stringtemplate.v4.ST;
  * @see ServerEvaluationStrategy
  */
 public abstract class BaseServerEvaluationStrategy extends ServerEvaluationStrategy {
-
+  
   /** Regexp to extract port (under the form 22/tcp or 4401/tcp, etc.) from label references */
   public static final String LABEL_CHE_SERVER_REF_KEY = "^che:server:(.*):ref$";
 
@@ -61,6 +62,9 @@ public abstract class BaseServerEvaluationStrategy extends ServerEvaluationStrat
 
   /** Used to store the address set by property {@code che.docker.ip.external}. if applicable. */
   protected String cheDockerIpExternal;
+
+  /** Used to store the suffix set by property {@code che.workspaces.routing-suffix}. if applicable. */
+  protected String cheWorkspacesRoutingSuffix;
 
   /** The current port of che. */
   private final String chePort;
@@ -104,12 +108,32 @@ public abstract class BaseServerEvaluationStrategy extends ServerEvaluationStrat
       String cheDockerCustomExternalProtocol,
       String chePort,
       boolean localDockerMode) {
+    this(cheDockerIp, 
+        cheDockerIpExternal, 
+        chePort, 
+        cheDockerCustomExternalTemplate,
+        cheDockerCustomExternalProtocol,
+        localDockerMode,
+        null);
+  }
+
+  /** Constructor to be called by derived strategies */
+  public BaseServerEvaluationStrategy(
+      String cheDockerIp,
+      String cheDockerIpExternal,
+      String cheDockerCustomExternalTemplate,
+      String cheDockerCustomExternalProtocol,
+      String chePort,
+      boolean localDockerMode,
+      String cheWorkspacesRoutingSuffix) {
     this.cheDockerIp = cheDockerIp;
     this.cheDockerIpExternal = cheDockerIpExternal;
     this.chePort = chePort;
     this.cheDockerCustomExternalTemplate = cheDockerCustomExternalTemplate;
     this.cheDockerCustomExternalProtocol = cheDockerCustomExternalProtocol;
     this.localDockerMode = localDockerMode;
+    this.cheWorkspacesRoutingSuffix = "NULL".equals(cheWorkspacesRoutingSuffix) ?
+        null : cheWorkspacesRoutingSuffix;
   }
 
   @Override
@@ -370,6 +394,10 @@ public abstract class BaseServerEvaluationStrategy extends ServerEvaluationStrat
       globalPropertiesMap.put("wildcardXipDomain", getWildcardXipDomain(externalAddress));
       globalPropertiesMap.put("chePort", chePort);
       globalPropertiesMap.put(IS_DEV_MACHINE_MACRO, getIsDevMachine());
+      globalPropertiesMap.put("user", EnvironmentContext.getCurrent().getSubject().getUserName());
+      if (cheWorkspacesRoutingSuffix != null) {
+          globalPropertiesMap.put("workspacesRoutingSuffix", cheWorkspacesRoutingSuffix);
+      }
     }
 
     /** Rendering */

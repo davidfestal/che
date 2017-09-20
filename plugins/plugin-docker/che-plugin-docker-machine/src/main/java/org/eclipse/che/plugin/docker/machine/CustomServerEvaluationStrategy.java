@@ -31,13 +31,15 @@ public class CustomServerEvaluationStrategy extends BaseServerEvaluationStrategy
           String cheDockerCustomExternalTemplate,
       @Nullable @Named("che.docker.server_evaluation_strategy.custom.external.protocol")
           String cheDockerCustomExternalProtocol,
-      @Named("che.port") String chePort) {
+      @Named("che.port") String chePort,
+      @Nullable @Named("che.workspaces.routing_suffix") String cheWorkspacesRoutingSuffix) {
     super(
         cheDockerIp,
         cheDockerIpExternal,
         cheDockerCustomExternalTemplate,
         cheDockerCustomExternalProtocol,
         chePort,
-        false);
+        false,
+        cheWorkspacesRoutingSuffix);
   }
 }
