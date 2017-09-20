@@ -97,6 +97,16 @@ CHE_IMAGE_TAG=${CHE_IMAGE_TAG:-${DEFAULT_CHE_IMAGE_TAG}}
 DEFAULT_CHE_LOG_LEVEL="INFO"
 CHE_LOG_LEVEL=${CHE_LOG_LEVEL:-${DEFAULT_CHE_LOG_LEVEL}}
 
+CHE_WORKSPACE_CHE__SERVER__ENDPOINT=${CHE_WORKSPACE_CHE__SERVER__ENDPOINT:-NULL}
+# http://che-eclipse-che.david-et-ruth.fr/wsmaster/api
+
+CHE_WORKSPACES_ROUTING__SUFFIX=${CHE_WORKSPACES_ROUTING__SUFFIX:-NULL}
+# 8a09.starter-us-east-2.openshiftapps.com
+
+CHE_OPENSHIFT_WORKSPACES_MASTER__URL=${CHE_OPENSHIFT_WORKSPACES_MASTER__URL:-NULL}
+# http://console.starter-us-east-2.openshift.com
+
+
 # Keycloak production endpoints are used by default
 DEFAULT_KEYCLOAK_OSO_ENDPOINT="https://sso.openshift.io/auth/realms/fabric8/broker/openshift-v3/token"
 KEYCLOAK_OSO_ENDPOINT=${KEYCLOAK_OSO_ENDPOINT:-${DEFAULT_KEYCLOAK_OSO_ENDPOINT}}
@@ -178,10 +188,10 @@ if [ -z "${OPENSHIFT_NAMESPACE_URL+x}" ]; then echo "[CHE] **ERROR**Env var OPEN
 # -----------------------------------
 echo -n "[CHE] Logging on using OpenShift endpoint \"${OPENSHIFT_ENDPOINT}\"..."
 if [ -z "${OPENSHIFT_TOKEN+x}" ]; then
-  oc login "${OPENSHIFT_ENDPOINT}" --insecure-skip-tls-verify=false -u "${OPENSHIFT_USERNAME}" -p "${OPENSHIFT_PASSWORD}" > /dev/null
+  oc login "${OPENSHIFT_ENDPOINT}" --insecure-skip-tls-verify=true -u "${OPENSHIFT_USERNAME}" -p "${OPENSHIFT_PASSWORD}" > /dev/null
   OPENSHIFT_TOKEN=$(oc whoami -t)
 else
-  oc login "${OPENSHIFT_ENDPOINT}" --insecure-skip-tls-verify=false --token="${OPENSHIFT_TOKEN}"  > /dev/null
+  oc login "${OPENSHIFT_ENDPOINT}" --insecure-skip-tls-verify=true --token="${OPENSHIFT_TOKEN}"  > /dev/null
 fi
 echo "done!"
 
@@ -243,9 +253,8 @@ then
     else
         "${COMMAND_DIR}"/multi-user/deployPostgresOnly.sh
     fi
+    "${COMMAND_DIR}"/multi-user/wait_until_postgres_is_available.sh
 fi
-
-"${COMMAND_DIR}"/multi-user/wait_until_postgres_is_available.sh
 
 # -------------------------------------------------------------
 # Setting Keycloak-related environment variables
@@ -323,6 +332,12 @@ CHE_IMAGE="${CHE_IMAGE_REPO}:${CHE_IMAGE_TAG}"
 CHE_IMAGE_SANITIZED=$(echo "${CHE_IMAGE}" | sed 's/\//\\\//g')
 
 MULTI_USER_REPLACEMENT_STRING="s+- env:+- env:\\n\
+          - name: \"CHE_WORKSPACE_CHE__SERVER__ENDPOINT\"\\n\
+            value: \"${CHE_WORKSPACE_CHE__SERVER__ENDPOINT}\"\\n\
+          - name: \"CHE_WORKSPACES_ROUTING__SUFFIX\"\\n\
+            value: \"${CHE_WORKSPACES_ROUTING__SUFFIX}\"\\n\
+          - name: \"CHE_OPENSHIFT_WORKSPACES_MASTER__URL\"\\n\
+            value: \"${CHE_OPENSHIFT_WORKSPACES_MASTER__URL}\"\\n\
           - name: \"CHE_WORKSPACE_LOGS\"\\n\
             value: \"${CHE_WORKSPACE_LOGS}\"\\n\
           - name: \"CHE_KEYCLOAK_AUTH__SERVER__URL\"\\n\
@@ -349,6 +364,7 @@ if [ "${OPENSHIFT_FLAVOR}" == "minishift" ]; then
     sed "s/    che-openshift-secure-routes: \"true\"/    che-openshift-secure-routes: \"false\"/" | \
     sed "s/    che-secure-external-urls: \"true\"/    che-secure-external-urls: \"false\"/" | \
     sed "s/    che.docker.server_evaluation_strategy.custom.external.protocol: https/    che.docker.server_evaluation_strategy.custom.external.protocol: http/" | \
+    sed "s/    che.docker.server_evaluation_strategy.custom.template: \"<serverName>-<if(isDevMachine)><workspaceIdWithoutPrefix><else><machineName><endif>-<externalAddress>\"/    che.docker.server_evaluation_strategy.custom.template: \"<serverName>-<if(isDevMachine)><workspaceIdWithoutPrefix><else><machineName><endif>-<if(workspacesRoutingSuffix)><user>-che.<workspacesRoutingSuffix><else><externalAddress><endif>\"/" | \
     sed "s/    che-openshift-precreate-subpaths: \"false\"/    che-openshift-precreate-subpaths: \"true\"/" | \
     sed "s/    che.predefined.stacks.reload_on_start: \"true\"/    che.predefined.stacks.reload_on_start: \"false\"/" | \
     sed "s|    keycloak-oso-endpoint:.*|    keycloak-oso-endpoint: ${KEYCLOAK_OSO_ENDPOINT}|" | \
@@ -372,8 +388,17 @@ else
   curl -sSL http://central.maven.org/maven2/io/fabric8/online/apps/che/"${OSIO_VERSION}"/che-"${OSIO_VERSION}"-openshift.yml | \
     if [ ! -z "${OPENSHIFT_NAMESPACE_URL+x}" ]; then sed "s/    hostname-http:.*/    hostname-http: ${OPENSHIFT_NAMESPACE_URL}/" ; else cat -; fi | \
     sed "s/          image:.*/          image: \"${CHE_IMAGE_SANITIZED}\"/" | \
+    sed "s/    workspaces-memory-limit: 2300Mi/    workspaces-memory-limit: 1300Mi/" | \
+    sed "s/    workspaces-memory-request: 1500Mi/    workspaces-memory-request: 500Mi/" | \
+    sed "s/    che-openshift-secure-routes: \"true\"/    che-openshift-secure-routes: \"false\"/" | \
+    sed "s/    che-secure-external-urls: \"true\"/    che-secure-external-urls: \"false\"/" | \
+    sed "s/    che.docker.server_evaluation_strategy.custom.external.protocol: https/    che.docker.server_evaluation_strategy.custom.external.protocol: http/" | \
+    sed "s/    che.docker.server_evaluation_strategy.custom.template: <serverName>-<if(isDevMachine)><workspaceIdWithoutPrefix><else><machineName><endif>-<externalAddress>/    che.docker.server_evaluation_strategy.custom.template: <serverName>-<if(isDevMachine)><workspaceIdWithoutPrefix><else><machineName><endif>-<if(workspacesRoutingSuffix)><user>-che.<workspacesRoutingSuffix><else><externalAddress><endif>/" | \
+    sed "s/    che-openshift-precreate-subpaths: \"false\"/    che-openshift-precreate-subpaths: \"true\"/" | \
+    sed "s/    che.predefined.stacks.reload_on_start: \"true\"/    che.predefined.stacks.reload_on_start: \"false\"/" | \
     sed "s|    keycloak-oso-endpoint:.*|    keycloak-oso-endpoint: ${KEYCLOAK_OSO_ENDPOINT}|" | \
     sed "s|    keycloak-github-endpoint:.*|    keycloak-github-endpoint: ${KEYCLOAK_GITHUB_ENDPOINT}|" | \
+    grep -v -e "tls:" -e "insecureEdgeTerminationPolicy: Redirect" -e "termination: edge" | \
     sed "s/    keycloak-disabled:.*/    keycloak-disabled: \"${CHE_KEYCLOAK_DISABLED}\"/" | \
     if [ "${CHE_LOG_LEVEL}" == "DEBUG" ]; then sed "s/    log-level: \"INFO\"/    log-level: \"DEBUG\"/" ; else cat -; fi | \
     sed "$MULTI_USER_REPLACEMENT_STRING" | \
